@@ -14,10 +14,13 @@ $(document).ready(() => {
 
   $('#create-user-btn').click((e) => {
     e.preventDefault();
-    if ($('#username-input').val().length > 0) {
-      socket.emit('new user', $('#username-input').val());
+    const usernameInput = $('#username-input').val();
+    if (usernameInput.length > 0) {
+      // Sanitize the username using DOMPurify
+      const sanitizedUsername = DOMPurify.sanitize(usernameInput);
+      socket.emit('new user', sanitizedUsername);
       // Save the current user when created
-      currentUser = $('#username-input').val();
+      currentUser = sanitizedUsername;
       $('.username-form').remove();
       $('.main-container').css('display', 'flex');
     }
